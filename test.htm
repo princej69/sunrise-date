@@ -1,0 +1,82 @@
+<style>
+    #daynightbar {
+        width: 100%;
+        height: 15px;
+        background: #080C3F;
+        border-radius: 7.5px;
+        transition: 0.5s;
+        transition-timing-function: cubic-bezier(0, 0, 0, 1);
+    }
+    #daynightbar:hover {
+        height:35px;
+    }
+    #abovehorison {
+        background: #6DC4FF;
+        height: 100%;
+        width: 1%;
+        margin-left: 50%;
+        font-size: 13px;
+        text-align: center;
+        transition: 0s;
+        border-radius: 7.5px;
+    }
+</style>
+<span id="date">Jan 1, 2023</span><br><br>
+Sunrise: <span id="sr">00:00</span><br>
+Solar noon: <span id="sn">00:00</span><br>
+Sunset: <span id="ss">00:00</span><br>
+<div id="daynightbar">
+    <div id="abovehorison">
+        <span id=1111></span>
+    </div>
+</div>
+<br><br>
+Moon phase: <span id="mi">0</span>%<br>
+<script src="library.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var day = 0
+    var months = ["jan", "feb", "mar", "apr", "mei", "jun", "jul", "agu", "seb", "okt", "nov", "des"]
+    
+    var times = SunCalc.getTimes(new Date(2023,0,0+day), 66, 0);
+    //console.log(times.sunrise)
+    
+    function seconds(x) {
+        if (x < 10) {
+            return "0" + x
+        } else {
+            return x
+        }
+    }
+    
+    function update(){
+        day+=0
+        times = 
+        //SunCalc.getTimes(new Date(2023,0,0+day), 14.739193, 0);
+        SunCalc.getTimes(new Date(), 14.739193, 0);
+        //SunCalc.getTimes(new Date(2023,0,0+day), 89, 0);
+        datey = 
+        //new Date(2023,0,0+day);
+        new Date();
+        
+        document.getElementById("date").innerHTML = (datey.getDate()) + " " + months[datey.getMonth()] + ", " + (datey.getFullYear())
+        document.getElementById("sr").innerHTML = ((times.sunrise.getUTCHours()) + ":" + seconds(times.sunrise.getUTCMinutes()) + ":" + seconds(times.sunrise.getUTCSeconds()) == "NaN:NaN:NaN" ? "----" : (times.sunrise.getUTCHours()) + ":" + seconds(times.sunrise.getUTCMinutes()) + ":" + seconds(times.sunrise.getUTCSeconds()))
+        document.getElementById("sn").innerHTML = ((times.solarNoon.getUTCHours()) + ":" + seconds(times.solarNoon.getUTCMinutes()) + ":" + seconds(times.solarNoon.getUTCSeconds()) == "NaN:NaN:NaN" ? "----" : (times.solarNoon.getUTCHours()) + ":" + seconds(times.solarNoon.getUTCMinutes()) + ":" + seconds(times.solarNoon.getUTCSeconds()))
+        document.getElementById("ss").innerHTML = ((times.sunset.getUTCHours()) + ":" + seconds(times.sunset.getUTCMinutes()) + ":" + seconds(times.sunset.getUTCSeconds()) == "NaN:NaN:NaN" ? "----" : (times.sunset.getUTCHours()) + ":" + seconds(times.sunset.getUTCMinutes()) + ":" + seconds(times.sunset.getUTCSeconds()))
+        
+        document.getElementById("mi").innerHTML = (SunCalc.getMoonIllumination(new Date(2023,0,0+day)).fraction*100).toFixed(0)
+        
+        try{
+            sunrise = ((times.sunrise.getUTCHours()*60)+times.sunrise.getUTCMinutes())
+            sunset  = ((times.sunset.getUTCHours()*60)+times.sunset.getUTCMinutes())
+            
+            document.getElementById("abovehorison").style.marginLeft = `${((sunrise/1440)*100)}%`
+            document.getElementById("abovehorison").style.width = `${(((sunset-sunrise)/1440)*100)}%`
+            
+            //document.getElementById("1111").innerText = Math.floor((sunset-sunrise)/60) + ":" + seconds((sunset-sunrise)%60)
+        }catch(e){
+            console.error(`ERROE????`)
+        }
+    }
+    
+    update()
+</script>
